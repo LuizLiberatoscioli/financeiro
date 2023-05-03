@@ -1,0 +1,12 @@
+Criar um api para gastos pessoas.
+
+	1- criar a estrutura do projeto - ok
+	2- planejar o sistema
+		2.1 - controle de usuarios (crud)
+		2.1.1 - criar a autenticacao com JWT 
+	2.2 - criar centros de custo (crud)
+		2.2.1- todo centro de custo tme que estar vinculado a um usuario
+	2.3 - criar os titulos , apagar e receber (crud)
+		2.3.1 - todo titulo deve estar vinculado a um usuario. 
+		2.3.2 - todo titulo deve estar vinculado a 1 ou 'n' centros de custos
+	
