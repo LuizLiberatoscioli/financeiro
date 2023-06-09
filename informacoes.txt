@@ -9,4 +9,6 @@ Criar um api para gastos pessoas.
 	2.3 - criar os titulos , apagar e receber (crud)
 		2.3.1 - todo titulo deve estar vinculado a um usuario. 
 		2.3.2 - todo titulo deve estar vinculado a 1 ou 'n' centros de custos
-	
+	2.4 - criar um endpoint de fluxo de caixa
+		2.4.1 - obter o total a pagar , total a receber ,o saldo , a lista de titulos a pagar ,
+		a lista de titulos a receber podendo filtrar por periodo de vencimento.
