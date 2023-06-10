@@ -1,5 +1,6 @@
 package com.financeiro.domain.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,6 +8,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.financeiro.domain.exception.ResourceBadRequestException;
+import com.financeiro.domain.exception.ResourceNotFoundException;
 import com.financeiro.domain.model.Usuario;
 import com.financeiro.domain.repository.UsuarioRepository;
 import com.financeiro.dto.usuario.UsuarioRequestDTO;
@@ -15,14 +18,14 @@ import com.financeiro.dto.usuario.UsuarioResponseDTO;
 public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioResponseDTO>{
 	
 	@Autowired
-	private UsuarioRepository usuarioRespository;
+	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
 	private ModelMapper mapper;
 
 	@Override
 	public List<UsuarioResponseDTO> obterTodos() {
-		List<Usuario> usuarios = usuarioRespository.findAll();
+		List<Usuario> usuarios = usuarioRepository.findAll();
 		
 		/*
 		 * for (Usuario usuario : usuarios) { UsuarioResponseDTO dto =
@@ -37,10 +40,10 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 
 	@Override
 	public UsuarioResponseDTO obterPorId(Long id) {
-		Optional<Usuario> optUsuario = usuarioRespository.findById(id);
+		Optional<Usuario> optUsuario = usuarioRepository.findById(id);
 		
 		if(optUsuario.isEmpty()) {
-			// exception
+			throw new ResourceNotFoundException("Não foi possivel encontrar o usuário com o id: "+id);
 		}
 		
 		return mapper.map(optUsuario.get(), UsuarioResponseDTO.class);
@@ -48,19 +51,53 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 
 	@Override
 	public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		validarUsuario(dto);
+		
+		Usuario usuario = mapper.map(dto, Usuario.class);
+		//dar um encoder na senha.
+		usuario.setId(null);
+		usuario = usuarioRepository.save(usuario);
+		return mapper.map(usuario, UsuarioResponseDTO.class);
 	}
 
 	@Override
 	public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		UsuarioResponseDTO usuarioBanco = obterPorId(id);
+		validarUsuario(dto);
+		
+		Usuario usuario = mapper.map(dto, Usuario.class);
+		
+		//dar um encoder na senha.
+		
+		usuario.setId(id);
+		usuario.setDataInativacao(usuarioBanco.getDataInativacao());
+		usuario = usuarioRepository.save(usuario);
+		return mapper.map(usuario, UsuarioResponseDTO.class);
 	}
 
 	@Override
 	public void deletar(Long id) {
-		// TODO Auto-generated method stub
+		
+		UsuarioResponseDTO usuarioEncontrado = obterPorId(id);
+		Usuario usuario = mapper.map(usuarioEncontrado, Usuario.class);
+		
+		usuario.setDataInativacao(new Date());
+		usuarioRepository.save(usuario);
+		
+	
+		/*
+		 * delecao fisica usuarioRepository.deleteById(id);
+		 */
+		
+	}
+	
+	private void validarUsuario(UsuarioRequestDTO dto) {
+		
+		if(dto.getEmail() == null || dto.getSenha() == null) {
+			throw new ResourceBadRequestException("E-mail e senha são obrigatórios");
+		}
 		
 	}
 
