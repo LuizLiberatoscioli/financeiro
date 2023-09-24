@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+/*import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;*/
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +21,7 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idUsuario")
 	private Long id;
+	
 	private String nome;
 	
 	@Column(nullable = false, unique = true)

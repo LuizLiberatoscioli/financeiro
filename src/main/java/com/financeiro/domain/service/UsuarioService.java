@@ -45,32 +45,32 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		//optional é tipo uma caixa, tenta resolver o problema . é padrao. se tiver usuario ele traz.
 		Optional<Usuario> optUsuario = usuarioRepository.findById(id);
 		
-	
-		
 		return mapper.map(optUsuario.get(), UsuarioResponseDTO.class);
 	}
 
 	@Override
 	public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
 		
-		
-		if(dto.getEmail() == null || dto.getSenha() == null ) {
-			throw new ResourceBadRequestException("E-mail e senha sao obrigatrios");
-		} 
+
 		validarUsuario(dto);
+		
+		Optional<Usuario> optUsuario = usuarioRepository.findByEmail(dto.getEmail());
+		
+		if(optUsuario.isPresent()) {
+			throw new ResourceBadRequestException("Ja existe um usuario cadastrado com esse email");
+		}
 		
 		Usuario usuario = mapper.map(dto, Usuario.class);
 		//dar um encoder na senha.
 		usuario.setId(null);
+		usuario.setDataCadastro(new Date());
 		usuario = usuarioRepository.save(usuario);
 		return mapper.map(usuario, UsuarioResponseDTO.class);
 	}
 
 	@Override
 	public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
-		
-	
-		
+			
 		UsuarioResponseDTO usuarioBanco = obterPorId(id);
 		validarUsuario(dto);
 		
@@ -80,6 +80,7 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		
 		usuario.setId(id);
 		usuario.setDataInativacao(usuarioBanco.getDataInativacao());
+		usuario.setDataCadastro(usuarioBanco.getDataCadastro());
 		usuario = usuarioRepository.save(usuario);
 		return mapper.map(usuario, UsuarioResponseDTO.class);
 	}
@@ -87,9 +88,13 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 	@Override
 	public void deletar(Long id) {
 		
-		UsuarioResponseDTO usuarioEncontrado = obterPorId(id);
-		Usuario usuario = mapper.map(usuarioEncontrado, Usuario.class);
+		Optional<Usuario> optUsuario = usuarioRepository.findById(id);
 		
+		if (optUsuario.isEmpty()) {
+			throw new ResourceNotFoundException("Usuario nao encontrado");
+		}
+		
+		Usuario usuario = optUsuario.get();
 		usuario.setDataInativacao(new Date());
 		usuarioRepository.save(usuario);
 		
