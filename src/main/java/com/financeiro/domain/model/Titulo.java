@@ -36,6 +36,7 @@ public class Titulo {
     // @JoinColumn(name = "idCentroDeCusto")
     // private CentroDeCusto centroDeCusto;
 
+    
     @ManyToMany
     @JoinTable(
         name = "titulo_centrodecusto",
