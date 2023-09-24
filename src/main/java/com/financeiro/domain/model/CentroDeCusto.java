@@ -17,65 +17,66 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "centrodecusto")
 public class CentroDeCusto {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idCentroDeCusto")
-	private Long id;
-	
-	@Column(nullable = false)
-	private String descricao;
-	
-	@Column(columnDefinition = "TEXT")
-	private String observacao;
-	
-	@ManyToOne
-	@JoinColumn(name = "idUsuario")
-	private Usuario usuario;
-	
-	//tabela mandatoria
-	@ManyToMany(mappedBy = "centrodecusto")
-	@JsonBackReference
-	private List<Titulo> titulos;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idCentroDeCusto")
+    private Long id;
 
-	public Long getId() {
-		return id;
-	}
+    @Column(nullable = false)
+    private String descricao;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @Column(columnDefinition = "TEXT")
+    private String observacao;
 
-	public String getDescricao() {
-		return descricao;
-	}
+    @ManyToOne
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    @ManyToMany(mappedBy = "centrosDeCustos")
+    @JsonBackReference
+    private List<Titulo> titulos;
 
-	public String getObservacao() {
-		return observacao;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setObservacao(String observacao) {
-		this.observacao = observacao;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public List<Titulo> getTitulos() {
-		return titulos;
-	}
+    public String getObservacao() {
+        return observacao;
+    }
 
-	public void setTitulos(List<Titulo> titulos) {
-		this.titulos = titulos;
-	}
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<Titulo> getTitulos() {
+        return titulos;
+    }
+
+    public void setTitulos(List<Titulo> titulos) {
+        this.titulos = titulos;
+    }
+
+    
 
 }

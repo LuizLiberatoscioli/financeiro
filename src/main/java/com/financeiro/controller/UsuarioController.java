@@ -19,6 +19,7 @@ import com.financeiro.domain.service.UsuarioService;
 import com.financeiro.dto.usuario.UsuarioRequestDTO;
 import com.financeiro.dto.usuario.UsuarioResponseDTO;
 
+//aceitar requisicao de qualquer lugar
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/usuarios")
@@ -33,17 +34,21 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/{id}")
+	//pegar o id do getmapping e transformar no do path
 	public ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable Long id){
 		return ResponseEntity.ok(usuarioService.obterPorId(id));	
 	}
 	
 	@PostMapping()
+	//post vem no corpo , diferente do get
+	//a capitura do corpo do post, usa o requestbody
 	public ResponseEntity<UsuarioResponseDTO> cadastrar(@RequestBody UsuarioRequestDTO dto) {
 		UsuarioResponseDTO usuario = usuarioService.cadastrar(dto);
 		return new ResponseEntity<>(usuario, HttpStatus.CREATED);
 		
 	}
 	@PutMapping("/{id}")
+	// o put e o get e o post juntos , recebe o id  pela url e o corpo
 	public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,@RequestBody UsuarioRequestDTO dto) {
 		UsuarioResponseDTO usuario = usuarioService.atualizar(id, dto);
 		return new ResponseEntity<>(usuario, HttpStatus.OK);

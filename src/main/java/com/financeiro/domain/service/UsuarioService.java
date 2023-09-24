@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.financeiro.domain.exception.ResourceBadRequestException;
 import com.financeiro.domain.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import com.financeiro.domain.repository.UsuarioRepository;
 import com.financeiro.dto.usuario.UsuarioRequestDTO;
 import com.financeiro.dto.usuario.UsuarioResponseDTO;
 
+@Service
 public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioResponseDTO>{
 	
 	@Autowired
@@ -40,11 +42,10 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 
 	@Override
 	public UsuarioResponseDTO obterPorId(Long id) {
+		//optional é tipo uma caixa, tenta resolver o problema . é padrao. se tiver usuario ele traz.
 		Optional<Usuario> optUsuario = usuarioRepository.findById(id);
 		
-		if(optUsuario.isEmpty()) {
-			throw new ResourceNotFoundException("Não foi possivel encontrar o usuário com o id: "+id);
-		}
+	
 		
 		return mapper.map(optUsuario.get(), UsuarioResponseDTO.class);
 	}
@@ -52,6 +53,10 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 	@Override
 	public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
 		
+		
+		if(dto.getEmail() == null || dto.getSenha() == null ) {
+			throw new ResourceBadRequestException("E-mail e senha sao obrigatrios");
+		} 
 		validarUsuario(dto);
 		
 		Usuario usuario = mapper.map(dto, Usuario.class);
@@ -63,6 +68,8 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 
 	@Override
 	public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
+		
+	
 		
 		UsuarioResponseDTO usuarioBanco = obterPorId(id);
 		validarUsuario(dto);
