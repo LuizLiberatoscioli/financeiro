@@ -13,11 +13,11 @@ import com.financeiro.domain.exception.ResourceBadRequestException;
 import com.financeiro.domain.exception.ResourceNotFoundException;
 import com.financeiro.domain.model.Usuario;
 import com.financeiro.domain.repository.UsuarioRepository;
-import com.financeiro.dto.usuario.UsuarioRequestDTO;
-import com.financeiro.dto.usuario.UsuarioResponseDTO;
+import com.financeiro.dto.usuario.UsuarioRequestDto;
+import com.financeiro.dto.usuario.UsuarioResponseDto;
 
 @Service
-public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioResponseDTO>{
+public class UsuarioService implements ICRUDService<UsuarioRequestDto , UsuarioResponseDto>{
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -26,7 +26,7 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 	private ModelMapper mapper;
 
 	@Override
-	public List<UsuarioResponseDTO> obterTodos() {
+	public List<UsuarioResponseDto> obterTodos() {
 		List<Usuario> usuarios = usuarioRepository.findAll();
 		
 		/*
@@ -35,21 +35,21 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		 */
 			
 		return usuarios.stream()
-				.map(usuario -> mapper.map(usuarios, UsuarioResponseDTO.class))
+				.map(usuario -> mapper.map(usuarios, UsuarioResponseDto.class))
 				.collect(Collectors.toList());
 		
 	}
 
 	@Override
-	public UsuarioResponseDTO obterPorId(Long id) {
+	public UsuarioResponseDto obterPorId(Long id) {
 		//optional é tipo uma caixa, tenta resolver o problema . é padrao. se tiver usuario ele traz.
 		Optional<Usuario> optUsuario = usuarioRepository.findById(id);
 		
-		return mapper.map(optUsuario.get(), UsuarioResponseDTO.class);
+		return mapper.map(optUsuario.get(), UsuarioResponseDto.class);
 	}
 
 	@Override
-	public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dto) {
+	public UsuarioResponseDto cadastrar(UsuarioRequestDto dto) {
 		
 
 		validarUsuario(dto);
@@ -65,13 +65,13 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		usuario.setId(null);
 		usuario.setDataCadastro(new Date());
 		usuario = usuarioRepository.save(usuario);
-		return mapper.map(usuario, UsuarioResponseDTO.class);
+		return mapper.map(usuario, UsuarioResponseDto.class);
 	}
 
 	@Override
-	public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
+	public UsuarioResponseDto atualizar(Long id, UsuarioRequestDto dto) {
 			
-		UsuarioResponseDTO usuarioBanco = obterPorId(id);
+		UsuarioResponseDto usuarioBanco = obterPorId(id);
 		validarUsuario(dto);
 		
 		Usuario usuario = mapper.map(dto, Usuario.class);
@@ -82,7 +82,7 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		usuario.setDataInativacao(usuarioBanco.getDataInativacao());
 		usuario.setDataCadastro(usuarioBanco.getDataCadastro());
 		usuario = usuarioRepository.save(usuario);
-		return mapper.map(usuario, UsuarioResponseDTO.class);
+		return mapper.map(usuario, UsuarioResponseDto.class);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDTO , UsuarioR
 		
 	}
 	
-	private void validarUsuario(UsuarioRequestDTO dto) {
+	private void validarUsuario(UsuarioRequestDto dto) {
 		
 		if(dto.getEmail() == null || dto.getSenha() == null) {
 			throw new ResourceBadRequestException("E-mail e senha são obrigatórios");

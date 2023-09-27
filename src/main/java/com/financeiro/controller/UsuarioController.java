@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.financeiro.domain.service.UsuarioService;
-import com.financeiro.dto.usuario.UsuarioRequestDTO;
-import com.financeiro.dto.usuario.UsuarioResponseDTO;
+import com.financeiro.dto.usuario.UsuarioRequestDto;
+import com.financeiro.dto.usuario.UsuarioResponseDto;
 
 //aceitar requisicao de qualquer lugar
 @CrossOrigin("*")
@@ -29,28 +29,28 @@ public class UsuarioController {
 	private UsuarioService usuarioService;
 	
 	@GetMapping
-	public ResponseEntity<List<UsuarioResponseDTO>> obterTodos(){
+	public ResponseEntity<List<UsuarioResponseDto>> obterTodos(){
 		return ResponseEntity.ok(usuarioService.obterTodos());	
 	}
 	
 	@GetMapping("/{id}")
 	//pegar o id do getmapping e transformar no do path
-	public ResponseEntity<UsuarioResponseDTO> obterPorId(@PathVariable Long id){
+	public ResponseEntity<UsuarioResponseDto> obterPorId(@PathVariable Long id){
 		return ResponseEntity.ok(usuarioService.obterPorId(id));	
 	}
 	
 	@PostMapping()
 	//post vem no corpo , diferente do get
 	//a capitura do corpo do post, usa o requestbody
-	public ResponseEntity<UsuarioResponseDTO> cadastrar(@RequestBody UsuarioRequestDTO dto) {
-		UsuarioResponseDTO usuario = usuarioService.cadastrar(dto);
+	public ResponseEntity<UsuarioResponseDto> cadastrar(@RequestBody UsuarioRequestDto dto) {
+		UsuarioResponseDto usuario = usuarioService.cadastrar(dto);
 		return new ResponseEntity<>(usuario, HttpStatus.CREATED);
 		
 	}
 	@PutMapping("/{id}")
 	// o put e o get e o post juntos , recebe o id  pela url e o corpo
-	public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,@RequestBody UsuarioRequestDTO dto) {
-		UsuarioResponseDTO usuario = usuarioService.atualizar(id, dto);
+	public ResponseEntity<UsuarioResponseDto> atualizar(@PathVariable Long id,@RequestBody UsuarioRequestDto dto) {
+		UsuarioResponseDto usuario = usuarioService.atualizar(id, dto);
 		return new ResponseEntity<>(usuario, HttpStatus.OK);
 		
 	}

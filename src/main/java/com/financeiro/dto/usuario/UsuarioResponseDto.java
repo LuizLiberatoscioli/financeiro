@@ -2,7 +2,7 @@ package com.financeiro.dto.usuario;
 
 import java.util.Date;
 
-public class UsuarioResponseDTO {
+public class UsuarioResponseDto {
 	
 	private Long id;
 	private String nome;
