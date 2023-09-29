@@ -112,6 +112,18 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDto , UsuarioR
 		}
 		
 	}
+	
+	
+	public UsuarioResponseDto obterPorEmail(String email) {
+		//optional é tipo uma caixa, tenta resolver o problema . é padrao. se tiver usuario ele traz.
+		Optional<Usuario> optUsuario = usuarioRepository.findByEmail(email);
+		
+		if(optUsuario.isPresent()) {
+			throw new ResourceNotFoundException("Email nao encontrado ");
+		}
+		
+		return mapper.map(optUsuario.get(), UsuarioResponseDto.class);
+	}
 
 	
 
