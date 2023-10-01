@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.financeiro.domain.exception.ResourceBadRequestException;
@@ -24,6 +25,9 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDto , UsuarioR
 	
 	@Autowired
 	private ModelMapper mapper;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public List<UsuarioResponseDto> obterTodos() {
@@ -62,6 +66,10 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDto , UsuarioR
 		
 		Usuario usuario = mapper.map(dto, Usuario.class);
 		//dar um encoder na senha.
+		
+		String senha = passwordEncoder.encode(usuario.getSenha());
+		usuario.setSenha(senha);
+		
 		usuario.setId(null);
 		usuario.setDataCadastro(new Date());
 		usuario = usuarioRepository.save(usuario);
@@ -77,6 +85,8 @@ public class UsuarioService implements ICRUDService<UsuarioRequestDto , UsuarioR
 		Usuario usuario = mapper.map(dto, Usuario.class);
 		
 		//dar um encoder na senha.
+		String senha = passwordEncoder.encode(dto.getSenha());
+		usuario.setSenha(senha);
 		
 		usuario.setId(id);
 		usuario.setDataInativacao(usuarioBanco.getDataInativacao());
