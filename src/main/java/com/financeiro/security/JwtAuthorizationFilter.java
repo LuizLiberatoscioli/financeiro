@@ -1,17 +1,12 @@
 package com.financeiro.security;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.financeiro.domain.model.Usuario;
-import com.financeiro.domain.service.UsuarioService;
-import com.financeiro.dto.usuario.UsuarioResponseDto;
 
-import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,16 +16,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private JwtUtil jwtUtil;
 	
-	@Autowired
-	private ModelMapper mapper;
-	
-	@Autowired
-	private UsuarioService usuarioService;
-	
+	private UserDetailsSecurityServer userDetailsSecurityServer;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserDetailsSecurityServer userDetailsSecurityServer) {
 		super(authenticationManager);
 		this.jwtUtil = jwtUtil;
+		this.userDetailsSecurityServer = userDetailsSecurityServer;
 		
 	}
 	
@@ -56,8 +47,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		
 		if (jwtUtil.isValidToken(token)) {
 			String email = jwtUtil.getUserName(token);
-			UsuarioResponseDto usuarioDto = usuarioService.obterPorEmail(email);
-			Usuario usuario = mapper.map(usuarioDto, Usuario.class);
+			/*
+			 * UsuarioResponseDto usuarioDto = usuarioService.obterPorEmail(email); Usuario
+			 * usuario = mapper.map(usuarioDto, Usuario.class);
+			 */
+			
+			Usuario usuario = (Usuario)userDetailsSecurityServer.loadUserByUsername(email);
+			
 			
 			return new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 			

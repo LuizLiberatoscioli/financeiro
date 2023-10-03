@@ -21,8 +21,10 @@ public class WebSecurityConfig {
 
 	@Autowired
 	private AuthenticationConfiguration authConfig;
-	
-	
+
+	@Autowired
+	private UserDetailsSecurityServer userDetailsSecurityServer;
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
 			throws Exception {
@@ -33,21 +35,18 @@ public class WebSecurityConfig {
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http
-				.headers().frameOptions().disable().and()
-				.cors().and()
-				.csrf().disable()
-				.authorizeHttpRequests((auth) -> auth
-						.requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+		http.headers().frameOptions().disable().and().cors().and().csrf().disable()
+				.authorizeHttpRequests((auth) -> auth.requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
 						.anyRequest().authenticated())
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilter(new JwtAuthenticationFilter(authenticationManager(authConfig), jwtUtil));
-		http.addFilter(new JwtAuthorizationFilter(authenticationManager(authConfig), jwtUtil));
+		http.addFilter(
+				new JwtAuthorizationFilter(authenticationManager(authConfig), jwtUtil, userDetailsSecurityServer));
 
 		return http.build();
 	}

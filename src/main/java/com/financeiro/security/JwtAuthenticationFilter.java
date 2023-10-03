@@ -33,9 +33,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private AuthenticationManager authenticationManager;
 
     private JwtUtil jwtUtil;
-    
-    @Autowired
-    private ModelMapper modelMapper;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil){
         super();
@@ -71,17 +68,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Usuario usuario  = (Usuario) authResult.getPrincipal();
         String token = jwtUtil.gerarToken(authResult);
         
-        UsuarioResponseDto usuarioResponse = modelMapper.map(usuario, UsuarioResponseDto.class);
+       // UsuarioResponseDto usuarioResponse = modelMapper.map(usuario, UsuarioResponseDto.class);
         
-		/*
-		 * UsuarioResponseDto usuarioResponse = new UsuarioResponseDto();
-		 * usuarioResponse.setId(usuario.getId());
-		 * usuarioResponse.setEmail(usuario.getEmail());
-		 * usuarioResponse.setNome(usuario.getNome());
-		 * usuarioResponse.setFoto(usuario.getFoto());
-		 * usuarioResponse.setDataInativacao(usuario.getDataInativacao());
-		 * usuarioResponse.setDataCadastro(usuario.getDataCadastro());
-		 */
+		
+		  UsuarioResponseDto usuarioResponse = new UsuarioResponseDto();
+		  usuarioResponse.setId(usuario.getId());
+		  usuarioResponse.setEmail(usuario.getEmail());
+		  usuarioResponse.setNome(usuario.getNome());
+		  usuarioResponse.setFoto(usuario.getFoto());
+		  usuarioResponse.setDataInativacao(usuario.getDataInativacao());
+		  usuarioResponse.setDataCadastro(usuario.getDataCadastro());
+		 
 
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setToken("Bearer " + token);
