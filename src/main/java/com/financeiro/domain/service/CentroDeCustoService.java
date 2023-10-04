@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.financeiro.domain.exception.ResourceNotFoundException;
 import com.financeiro.domain.model.CentroDeCusto;
@@ -15,6 +16,7 @@ import com.financeiro.domain.repository.CentroDeCustoRepository;
 import com.financeiro.dto.usuario.centrodecusto.CentroDeCustoRequestDto;
 import com.financeiro.dto.usuario.centrodecusto.CentroDeCustoResponseDto;
 
+@Service
 public class CentroDeCustoService implements ICRUDService<CentroDeCustoRequestDto, CentroDeCustoResponseDto> {
 
 	@Autowired
