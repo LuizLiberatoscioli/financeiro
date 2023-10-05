@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.financeiro.domain.exception.ResourceBadRequestException;
 import com.financeiro.domain.exception.ResourceNotFoundException;
 import com.financeiro.domain.model.Titulo;
 import com.financeiro.domain.model.Usuario;
@@ -80,10 +81,19 @@ public class TituloService implements ICRUDService<TituloRequestDto , TituloResp
 
 	@Override
 	public void deletar(Long id) {
-obterPorId(id);
+		obterPorId(id);
 		
 		tituloRepository.deleteById(id);
 		
 	}
+	
+	private void validarTitulo(TituloRequestDto dto) {
+		
+		if(dto.getTipo() == null || dto.getDataVencimento() == null || dto.getValor() == null || dto.getDescricao() == null) {
+			throw new ResourceBadRequestException("Os campos tipo , vencimento , valor e descrcicao sao obrigatorios.");
+		}
+			
+		
+	} 
 
 }
