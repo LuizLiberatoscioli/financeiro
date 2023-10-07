@@ -29,7 +29,9 @@ public class TituloService implements ICRUDService<TituloRequestDto, TituloRespo
 	@Override
 	public List<TituloResponseDto> obterTodos() {
 
-		List<Titulo> titulos = tituloRepository.findAll();
+		Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Titulo> titulos = tituloRepository.findByUsuario(usuario);
 
 		return titulos.stream().map(titulo -> mapper.map(titulo, TituloResponseDto.class)).collect(Collectors.toList());
 	}
@@ -41,6 +43,7 @@ public class TituloService implements ICRUDService<TituloRequestDto, TituloRespo
 		if (optTitulo.isEmpty()) {
 			throw new ResourceNotFoundException("Nao foi possivel encontrar o titulo com o id " + id);
 		}
+		Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return mapper.map(optTitulo.get(), TituloResponseDto.class);
 	}
 
