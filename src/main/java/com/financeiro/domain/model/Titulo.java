@@ -57,7 +57,7 @@ public class Titulo {
     private Date dataPagamento;
 
     @Column(columnDefinition = "TEXT")
-    private String observacao;
+	private String observacao;
 
     public Long getId() {
         return id;

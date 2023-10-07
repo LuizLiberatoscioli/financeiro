@@ -26,36 +26,36 @@ public class TituloController {
 
 	@Autowired
 	private TituloService tituloService;
-	
+
 	@GetMapping
-	public ResponseEntity<List<TituloResponseDto>> obterTodos(){
-		
+	public ResponseEntity<List<TituloResponseDto>> obterTodos() {
+
 		return ResponseEntity.ok(tituloService.obterTodos());
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<TituloResponseDto> obterId(@PathVariable Long id){
-		
+	public ResponseEntity<TituloResponseDto> obterId(@PathVariable Long id) {
+
 		return ResponseEntity.ok(tituloService.obterPorId(id));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<TituloResponseDto> cadastrar(@RequestBody TituloRequestDto dto){
+	public ResponseEntity<TituloResponseDto> cadastrar(@RequestBody TituloRequestDto dto) {
 		TituloResponseDto response = tituloService.cadastrar(dto);
-		return new ResponseEntity<>(response , HttpStatus.CREATED);
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<TituloResponseDto> atualizar(@PathVariable Long id ,@RequestBody TituloRequestDto dto){
+	public ResponseEntity<TituloResponseDto> atualizar(@PathVariable Long id, @RequestBody TituloRequestDto dto) {
 		TituloResponseDto response = tituloService.atualizar(id, dto);
 		return ResponseEntity.ok(tituloService.atualizar(id, dto));
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deletar(@PathVariable Long id){
+	public ResponseEntity<?> deletar(@PathVariable Long id) {
 		tituloService.deletar(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		
+
 	}
-	
+
 }
